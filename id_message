@@ -1,1 +1,23 @@
+import telebot
+from telebot import types
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton,ReplyKeyboardMarkup, KeyboardButton
+
+TELEGRAM_TOKEN = '7491801885:AAHPhnWTteFVQYRmuzhdIdzALCUfbNqVHac'
+
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
+
+
+@bot.message_handler(content_types= ['photo'])
+def message_handler(message):
+    bot.send_photo(message.chat.id, message.photo[0].file_id , "я могу скопировать ваше фото)))")
+
+@bot.message_handler(content_types= ['text'])
+def message_handler(message):
+    bot.send_message(message.chat.id, message.from_user.id)
+
+@bot.message_handler(content_types= ['voice'])
+def message_handler(message):
+    bot.send_voice(message.chat.id, message.voice.file_id )
+
+bot.infinity_polling()
 
