@@ -1,0 +1,96 @@
+import telebot
+from telebot import types
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton,ReplyKeyboardMarkup, KeyboardButton
+
+import sqlite3
+
+
+
+TELEGRAM_TOKEN = '7491801885:AAHPhnWTteFVQYRmuzhdIdzALCUfbNqVHac'
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
+
+@bot.message_handler(content_types= ['photo'])
+def message_handler(message):
+    bot.send_message(message.chat.id, message.from_user.id)
+
+@bot.message_handler(content_types= ['text'])
+def message_handler(message):
+    con = sqlite3.connect("BOT_TG.db")
+    cursor = con.cursor()
+    ID = message.from_user.id
+    USER_name = message.from_user.username
+    AVTOV = 'n'
+    Y = 'Вы зареганы в БД'
+
+    cursor.execute(f"SELECT TG_id,UserName FROM Users WHERE TG_id = 2127127 ")
+    if cursor.fetchone() == None:
+        Param = (ID, USER_name, AVTOV, Y)
+        cursor.execute("INSERT INTO Users (TG_id, UserName, Avtovhod ,Y ) VALUES (?, ? , ? , ?)", Param)
+        con.commit()
+    else:
+        cursor.execute(f"SELECT TG_id,UserName FROM Users WHERE TG_id = 2127127 ")
+        ID, Uname = cursor.fetchone()
+        Y = f'{Uname} Вы зарегестрированы в БД '
+    bot.send_message(ID , Y)
+
+
+
+@bot.message_handler(content_types= ['voice'])
+def message_handler(message):
+    bot.send_voice(message.chat.id, message.voice.file_id )
+
+
+
+bot.infinity_polling()
+
+
+
+"""
+Создание БД
+import sqlite3
+
+con = sqlite3.connect("metanit.db")
+cursor = con.cursor()
+"""
+
+
+
+
+
+"""
+Добавление в БД
+bob = ("Bob", 42)
+cursor.execute("INSERT INTO people (name, age) VALUES (?, ?)", bob)
+con.commit()
+"""
+
+"""
+Взять значения из БД
+cursor.execute("SELECT name, age FROM people WHERE id=2")
+name, age = cursor.fetchone()
+"""
+
+"""
+Обновление данных
+Setup = ("Tomas", "Tom")
+cursor.execute("UPDATE people SET name =? WHERE name=?",Setup )
+con.commit()
+"""
+
+"""
+Удаление
+cursor.execute("DELETE FROM people WHERE name=?", ("Bob",))
+con.commit()
+"""
+
+
+"""
+    cursor.execute(f"SELECT Soobsh FROM Users WHERE UserName = '{str(USER_name)}' " )
+    Proverka = cursor.fetchone()[0]
+    print(Proverka)
+"""
+"""
+    Param = (ID, USER_name , SOOBSH)
+    cursor.execute("INSERT INTO Users (User_tg_id, UserName, Soobsh ) VALUES (?, ? ,?)", Param)
+    con.commit()
+"""
